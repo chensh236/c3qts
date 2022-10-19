@@ -23,6 +23,9 @@
 
 import importlib_metadata
 
+from .util import logger 
+from .settings import SETTINGS
+
 try:
     __version__ = importlib_metadata.version("c3qts")
 except importlib_metadata.PackageNotFoundError:
