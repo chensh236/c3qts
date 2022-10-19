@@ -59,7 +59,7 @@ except Exception:
 
 import yaml
 if not os.path.exists(os.path.join(TEMP_DIR, "future_origin_data.yaml")):
-    logger.error(f"应将期货原始数据的格式放置于目录 {TEMP_DIR}中")
+    logger.error(f"应将期货原始数据的格式文件\"future_origin_data\"放置于目录 {TEMP_DIR}中")
     exit()
 with open(os.path.join(TEMP_DIR, "future_origin_data.yaml"), "r", encoding="utf-8") as f:
     future_origin_data_conf = yaml.safe_load(f)

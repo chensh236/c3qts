@@ -23,8 +23,8 @@
 
 import importlib_metadata
 
-from .util import logger 
-from .settings import SETTINGS
+from .core.util import logger 
+from .core.settings import SETTINGS
 
 try:
     __version__ = importlib_metadata.version("c3qts")
