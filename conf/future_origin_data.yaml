@@ -1,0 +1,47 @@
+---
+name: origin_data
+# 序列化一定要注意版本号,当修改了字段,一定要修改版本号避免出错
+version: 0.0.1
+field_name:
+  # 注释掉的表示Tinysoft没有该项高频数据
+  - Day
+  - Time
+  - Millisec
+  - BidPrice1
+  - BidVolume1
+  - BidPrice2
+  - BidVolume2
+  - BidPrice3
+  - BidVolume3
+  - BidPrice4
+  - BidVolume4
+  - BidPrice5
+  - BidVolume5
+  - AskPrice1
+  - AskVolume1
+  - AskPrice2
+  - AskVolume2
+  - AskPrice3
+  - AskVolume3
+  - AskPrice4
+  - AskVolume4
+  - AskPrice5
+  - AskVolume5
+  # 这里表示的上一个周期的收盘价
+  - LastPrice
+  - Volume
+  # 这里表示的是成交金额amount
+  - Turnover
+  #  涨跌停价格需要日更新，不与其他tick数据一起更新
+  - UpperLimitPrice
+  - LowerLimitPrice
+  - PreClosePrice
+    # - PreOpenInterest
+  # SettlementPrice与PreSettlementPrice为行权价
+  # - SettlementPrice
+  # - PreSettlementPrice
+  - OpenInterest
+  - OpenPrice
+  - ClosePrice
+  - HighestPrice
+  - LowestPrice
