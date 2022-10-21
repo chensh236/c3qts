@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 from typing import Dict, Tuple, Any
 from packaging import version
+import json
 
 '''
 获得平台的文件夹
@@ -62,8 +63,21 @@ if not os.path.exists(os.path.join(TEMP_DIR, "future_origin_data.yaml")):
     logger.error(f"应将期货原始数据的格式文件\"future_origin_data\"放置于目录 {TEMP_DIR}中")
     exit()
 with open(os.path.join(TEMP_DIR, "future_origin_data.yaml"), "r", encoding="utf-8") as f:
-    future_origin_data_conf = yaml.safe_load(f)
+    FUTURE_ORIGIN_CONF = yaml.safe_load(f)
 
+class JsonHelper:
+    def __init__(self) -> None:
+        return
+    
+    @staticmethod
+    def load_json(fp, mode):
+        with open(fp, mode) as f:
+            return json.load(f)
+    
+    @staticmethod
+    def save_json(fp, mode, data):
+        with open(fp, mode) as f:
+            json.dump(data)
 
 class H5Helper:
     def __init__(self, conf=None) -> None:
@@ -127,6 +141,6 @@ class H5Helper:
 
 
 # future origin data h5 helper
-fo_h5 = H5Helper(future_origin_data_conf)
+fo_h5 = H5Helper(FUTURE_ORIGIN_CONF)
 base_h5 = H5Helper()
 RUNTYPE = "debug"

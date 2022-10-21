@@ -20,9 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
 import importlib_metadata
-
 try:
     __version__ = importlib_metadata.version("c3qts")
 except importlib_metadata.PackageNotFoundError:

@@ -19,14 +19,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
-
-import importlib_metadata
-
-from .util import logger 
-from .settings import SETTINGS
-
-try:
-    __version__ = importlib_metadata.version("c3qts")
-except importlib_metadata.PackageNotFoundError:
-    __version__ = "dev"
