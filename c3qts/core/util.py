@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Dict, Tuple, Any
 from packaging import version
 import json
+import pandas as pd
 
 '''
 获得平台的文件夹
@@ -139,8 +140,35 @@ class H5Helper:
             else:
                 return data[row_index][()]
 
+class CSVHelper:
+    def __init__(self) -> None:
+        return
+
+    def save(self, filename, data):
+        if type(data) != pd.core.frame.DataFrame:
+            logger.error(f'{filename}:传入数据类型不为dataframe')
+            return
+        data.to_csv(filename)
+
+    def load(self, filename, index_name=None):
+        """
+            filename: 文件地址
+            index_name: 索引列，如果为None则使用默认的索引
+            version_check: 
+                none   :        不检查字段版本,加快运行时间
+                'quick':        只检查field_name的长度
+                'debug':        检查所有的字段名字以及版本号是否兼容
+        """
+        if not os.path.exists(filename):
+            logger.error(f'{filename}:文件不存在')
+        if index is None:
+            return pd.read_csv(filename)
+        else:
+            return pd.read_csv(filename, index_col=index_name)
+
 
 # future origin data h5 helper
 fo_h5 = H5Helper(FUTURE_ORIGIN_CONF)
 base_h5 = H5Helper()
+csv_helper = CSVHelper()
 RUNTYPE = "debug"
