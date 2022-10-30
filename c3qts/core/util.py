@@ -89,15 +89,18 @@ class H5Helper:
                     f"日志配置必须包含'name' / 'field_name' / 'version' 等字段. 目前conf={conf}"
                 )
 
-    def save(self, filename, data):
+    def save(self, filename, data, index=None):
         with h5py.File(name=filename, mode="w") as h5_file:
-            
             if self.conf is not None:
                 h5_file.create_dataset(name="ds", data=data, dtype=float)
                 h5_file['ds'].attrs["field_name"] = self.conf["field_name"]
                 h5_file['ds'].attrs["version"] = self.conf["version"]
+                if index is not None:
+                    h5_file.create_dataset(name="index", data=index, dtype=int)
             else:
-                h5_file.create_dataset(name="ds", data=data)
+                h5_file.create_dataset(name="ds", data=data, dtype=float)
+                if index is not None:
+                    h5_file.create_dataset(name="index", data=index, dtype=int)
 
     def load(self, filename, row_index = None, check: str = None):
         """
@@ -110,35 +113,37 @@ class H5Helper:
         """
         with h5py.File(filename, mode="r") as h5_file:
             data = h5_file['ds']
-
+            index = None
+            if 'index' in h5_file.keys():
+                index = h5_file['index']
             if check is not None and self.conf is not None:
                 check = check.lower()
                 if 'field_name' not in data.attrs:
                     logger.error(
                         f"{filename} 的 attrs 没有字段信息. f{data.attrs.keys()}")
-                    return None
+                    return None, None
                 if check == "quick":
                     if len(data.attrs['field_name']) != len(
                             self.conf['field_name']):
                         logger.error(f"""{filename} 的字段数量与配置文件中指定的字段数量对不上. 
                             文件中: {len(data.attrs['field_name'])}.
                             配置中:{len(self.conf['field_name'])}""")
-                        return None
+                        return None, None
                 elif check == "debug":
                     if 'version' not in data.attrs:
                         logger.error(f"{filename} 没有 version 信息")
-                        return None
+                        return None, None
                     if version.parse(data.attrs['version']) > version.parse(
                             self.conf['version']):
                         logger.error(
                             f"版本不兼容. {filename}版本为 {data.attrs['version']}. 配置文件中版本为{self.conf['version']}"
                         )
-                        return None
+                        return None, None
 
             if row_index is None:
-                return data[()]
+                return data[()], index
             else:
-                return data[row_index][()]
+                return data[row_index][()], index
 
 class CSVHelper:
     def __init__(self) -> None:
