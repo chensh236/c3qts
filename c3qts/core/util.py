@@ -6,6 +6,7 @@ from typing import Dict, Tuple, Any
 from packaging import version
 import json
 import pandas as pd
+import pickle
 
 '''
 获得平台的文件夹
@@ -140,12 +141,15 @@ class H5Helper:
                         )
                         return None, None
 
+            index_data = None
+            if index is not None:
+                index_data = index[()]
             if row_index is None:
-                return data[()], index[()]
+                return data[()], index_data
             else:
-                return data[row_index][()], index[()]
+                return data[row_index][()], index_data
 
-class CSVHelper:
+class PKLHelper:
     def __init__(self) -> None:
         return
 
@@ -153,9 +157,10 @@ class CSVHelper:
         if type(data) != pd.core.frame.DataFrame:
             logger.error(f'{filename}:传入数据类型不为dataframe')
             return
-        data.to_csv(filename)
+        with open(filename, 'wb') as f:
+            pickle.dump(data, f)
 
-    def load(self, filename, index_name=None):
+    def load(self, filename):
         """
             filename: 文件地址
             index_name: 索引列，如果为None则使用默认的索引
@@ -166,14 +171,11 @@ class CSVHelper:
         """
         if not os.path.exists(filename):
             logger.error(f'{filename}:文件不存在')
-        if index is None:
-            return pd.read_csv(filename)
-        else:
-            return pd.read_csv(filename, index_col=index_name)
-
+        with open(filename, 'rb') as f:
+            return pickle.load(f)
 
 # future origin data h5 helper
 fo_h5 = H5Helper(FUTURE_ORIGIN_CONF)
 base_h5 = H5Helper()
-csv_helper = CSVHelper()
+pkl_helper = PKLHelper()
 RUNTYPE = "debug"
