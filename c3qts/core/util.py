@@ -141,9 +141,9 @@ class H5Helper:
                         return None, None
 
             if row_index is None:
-                return data[()], index
+                return data[()], index[()]
             else:
-                return data[row_index][()], index
+                return data[row_index][()], index[()]
 
 class CSVHelper:
     def __init__(self) -> None:
