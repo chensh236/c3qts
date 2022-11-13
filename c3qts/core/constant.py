@@ -4,6 +4,11 @@ General constant enums used in the trading platform.
 
 from enum import Enum
 
+class DATATYPE(Enum):
+    BASE_DATA = 'base_data'
+    ZL_DATA = 'zl_data'
+    RULE_DATA = 'rule_data'
+    
 class Direction(Enum):
     """
     Direction of order/trade/position.
@@ -166,7 +171,7 @@ class Interval(Enum):
     WEEKLY = "w"
     TICK = "tick"
 
-class ContrastType(Enum):
+class ContractType(Enum):
     '''
     Contract types
     '''
@@ -184,6 +189,8 @@ class ContrastType(Enum):
     LX2 = 'LX2'
     # 连3
     LX3 = 'LX3'
+    # 原始合约合并
+    MERGE_ORI ='ORI_MERGE'
 
 """
 期货品种在天软中的主力合约映射
