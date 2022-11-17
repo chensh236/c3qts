@@ -190,7 +190,7 @@ class ContractType(Enum):
     # 连3
     LX3 = 'LX3'
     # 原始合约合并
-    MERGE_ORI ='ORI_MERGE'
+    MERGE_ORI ='ORIGIN_MERGE'
 
 """
 期货品种在天软中的主力合约映射
