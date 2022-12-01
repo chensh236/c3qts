@@ -7,6 +7,7 @@ from packaging import version
 import json
 import pandas as pd
 import pickle
+import numpy as np
 
 '''
 获得平台的文件夹
@@ -90,20 +91,37 @@ class H5Helper:
                     f"日志配置必须包含'name' / 'field_name' / 'version' 等字段. 目前conf={conf}"
                 )
 
-    def save(self, filename, data, index=None):
-        with h5py.File(name=filename, mode="w") as h5_file:
-            if self.conf is not None:
-                h5_file.create_dataset(name="ds", data=data, dtype=float)
-                h5_file['ds'].attrs["field_name"] = self.conf["field_name"]
-                h5_file['ds'].attrs["version"] = self.conf["version"]
+    def save(self, filename, data, index=None, append=False):
+        if append:
+            with h5py.File(name=filename, mode="a") as h5_file:
+                rows = h5_file['ds'].shape[0]
+                new_rows = rows + data.shape[0]
+                if len(h5_file['ds'].shape) == 1:
+                    new_shape = (new_rows,)
+                else:
+                    new_shape = (new_rows, h5_file['ds'].shape[1])
+                h5_file['ds'].resize(new_shape)
+                h5_file['ds'][rows : new_rows] = data
                 if index is not None:
-                    h5_file.create_dataset(name="index", data=index, dtype=int)
-            else:
-                h5_file.create_dataset(name="ds", data=data, dtype=float)
-                if index is not None:
-                    h5_file.create_dataset(name="index", data=index, dtype=int)
+                    h5_file['index'].resize((new_rows,))
+                    h5_file['index'][rows : new_rows] = index
+                    
+        else:
+            with h5py.File(name=filename, mode="w") as h5_file:
+                maxshape_ds = [None] +  [x for x in data.shape[1:]]
+                maxshape_index = [None]
+                if self.conf is not None:
+                    h5_file.create_dataset(name="ds", data=data, maxshape=maxshape_ds, chunks=True, compression="gzip", dtype=float)
+                    h5_file['ds'].attrs["field_name"] = self.conf["field_name"]
+                    h5_file['ds'].attrs["version"] = self.conf["version"]
+                    if index is not None:
+                        h5_file.create_dataset(name="index", data=index, maxshape=maxshape_index, chunks=True, compression="gzip", dtype=int)
+                else:
+                    h5_file.create_dataset(name="ds", data=data, maxshape=maxshape_ds, chunks=True, compression="gzip", dtype=float)
+                    if index is not None:
+                        h5_file.create_dataset(name="index", data=index, maxshape=maxshape_index, chunks=True, compression="gzip", dtype=int)
 
-    def load(self, filename, row_index = None, check: str = None):
+    def load(self, filename, start: int = None, end: int = None, check: str = None):
         """
             filename: 文件地址
             row_index: 行索引. None 表示文件的所有行都会被读出来
@@ -144,10 +162,12 @@ class H5Helper:
             index_data = None
             if index is not None:
                 index_data = index[()]
-            if row_index is None:
+            if start is None or end is None:
                 return data[()], index_data
             else:
-                return data[row_index][()], index_data
+                row_index = np.where((index_data >= start)&(index_data <= end))[0]
+                start_index, end_index = int(row_index[0]), int(row_index[-1] + 1)
+                return data[start_index : end_index], index_data[start_index : end_index]
 
 class PKLHelper:
     def __init__(self) -> None:
