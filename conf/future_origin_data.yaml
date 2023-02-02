@@ -36,10 +36,10 @@ field_name:
   - UpperLimitPrice
   - LowerLimitPrice
   - PreClosePrice
-    # - PreOpenInterest
+  - PreOpenInterest
   # SettlementPrice与PreSettlementPrice为行权价
-  # - SettlementPrice
-  # - PreSettlementPrice
+  - SettlementPrice
+  - PreSettlementPrice
   - OpenInterest
   - OpenPrice
   - ClosePrice

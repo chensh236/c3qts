@@ -12,6 +12,11 @@
 ## 说明
 
 量化交易系统核心模块，包括配置信息等
+## 安装
+1. virtualenv  venv(创建虚拟环境)
+2. source venv/bin/activeate(激活虚拟环境)
+3. pip3 install -r requirements.txt(pip安装modules)
+4. 手动安装c3qts的相关组件。手动安装：进入文件夹里面，python3 setup.py install即可
 
 ## 使用
 
