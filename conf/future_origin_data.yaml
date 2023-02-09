@@ -29,18 +29,18 @@ field_name:
   - AskVolume5
   # 这里表示的上一个周期的收盘价
   - LastPrice
-  - Volume
+  - Volume_chg
   # 这里表示的是成交金额amount
-  - Turnover
+  - Turnover_chg
   #  涨跌停价格需要日更新，不与其他tick数据一起更新
   - UpperLimitPrice
   - LowerLimitPrice
   - PreClosePrice
-  - PreOpenInterest
   # SettlementPrice与PreSettlementPrice为行权价
   - SettlementPrice
   - PreSettlementPrice
   - OpenInterest
+  - PreOpenInterest
   - OpenPrice
   - ClosePrice
   - HighestPrice
