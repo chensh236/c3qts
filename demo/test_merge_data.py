@@ -40,7 +40,7 @@ def worker(variety):
     如果factor_name为''则表示拼接行情数据；
     如果date_为空表示使用当天的数据，否则传入'YYYY-MM-DD'格式的日期。
     '''
-    Merge.append_zl_tick_data(variety, date_='2023-03-11')
+    # Merge.append_zl_tick_data(variety, date_='2023-03-11')
 p_list = []
 for variety in ['AG']:
     logger.info(f'主力合约合并 ##### {variety} #####')

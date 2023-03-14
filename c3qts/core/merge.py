@@ -164,7 +164,7 @@ class Merge:
             # TODO: 下面的代码与上面重复，屎，有空改
             if idx == len(zl_info_date_list) - 1:
             # if idx == 499:
-                print(date_, curr_sym, dt_int_start, dt_int_end)
+                # print(date_, curr_sym, dt_int_start, dt_int_end)
                 data, index = fo_h5.load(os.path.join(input_fp, f'{curr_sym}.h5'), start=dt_int_start, end=dt_int_end)
                 if data is not None:
                     if merge_data is None:

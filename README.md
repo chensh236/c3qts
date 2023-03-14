@@ -27,7 +27,7 @@
 现有主力合约数据拼合有两个功能：
 1. 拼合所有的主力合约数据（包括因子数据）：
 ```python
-from c3qts_request.merge import Merge
+from c3qts.core.merge import Merge
 # 拼合行情数据
 Merge.merge_zl_tick_data(variety='AG')
 # 拼合因子数据
@@ -36,7 +36,7 @@ Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120_
 需要注意的是，这里的主力合约判断方法沿用Tinysoft的判断方法，即使用成交量最大的合约作为次日主力合约。
 2. 拼合特定日的主力合约数据（包括因子数据）:
 ```python
-from c3qts_request.merge import Merge
+from c3qts.core.merge import Merge
 Merge.append_zl_tick_data(variety='AG', date_='2023-03-11')
 ```
 这里需要注意的是，如若传入日期`date_`早于已有数据的最晚日期，则取消拼合，显示错误：
