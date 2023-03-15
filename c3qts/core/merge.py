@@ -14,8 +14,10 @@ import numpy as np
 class Merge:
     @staticmethod
     # 追加最新的tick数据
-    def append_zl_tick_data(variety, date_='', factor_name='', author=''):
+    def append_zl_tick_data(variety: str, date_:str ='', factor_name:str ='', author:str =''):
         # 修改因子名称为因子_作者名
+        if len(factor_name) > 0 and len(author) == 0 or len(factor_name) == 0 and len(author) > 0:
+            logger.error(f'因子{factor_name}, 作者{author}缺乏其中一个必要元素')
         factor_name = f'{factor_name}_{author}'
         database_dir = SETTINGS['database.basedir']
         # 如若date为空，则设置为当天日期
@@ -29,7 +31,7 @@ class Merge:
             except ValueError:
                 logger.error(f"日期{date_}的格式错误")
                 return False
-        # 读取数据
+        # 读取数据(后面更改为使用future_storage工具)
         input_fp = os.path.join(database_dir, '期货', 'tick', 'ORIGIN_MERGE', variety)
         output_fp = os.path.join(database_dir, '期货', 'tick', 'ZL', variety)
         if len(factor_name) != '_':
@@ -97,7 +99,9 @@ class Merge:
     如果不更新合约则只更新日期；如果更新合约则根据日期读取上一个合约
     '''
     @staticmethod
-    def merge_zl_tick_data(variety, factor_name='', author=''):
+    def merge_zl_tick_data(variety: str, factor_name:str ='', author:str =''):
+        if len(factor_name) > 0 and len(author) == 0 or len(factor_name) == 0 and len(author) > 0:
+            logger.error(f'因子{factor_name}, 作者{author}缺乏其中一个必要元素')
         # 修改因子名称为因子_作者名
         factor_name = f'{factor_name}_{author}'
         database_dir = SETTINGS['database.basedir']
@@ -194,7 +198,7 @@ class Merge:
         return False
     
     @staticmethod
-    def merge_tick_data(variety, sym):
+    def merge_tick_data(variety: str, sym:str):
         database_dir = SETTINGS['database.basedir']
         # 读取数据
         input_fp = os.path.join(database_dir, '期货/tick/ORIGIN', variety, sym)
