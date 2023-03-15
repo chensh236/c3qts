@@ -14,7 +14,9 @@ import numpy as np
 class Merge:
     @staticmethod
     # 追加最新的tick数据
-    def append_zl_tick_data(variety, date_='', factor_name=''):
+    def append_zl_tick_data(variety, date_='', factor_name='', author=''):
+        # 修改因子名称为因子_作者名
+        factor_name = f'{factor_name}_{author}'
         database_dir = SETTINGS['database.basedir']
         # 如若date为空，则设置为当天日期
         if isinstance(date_, int):
@@ -30,7 +32,7 @@ class Merge:
         # 读取数据
         input_fp = os.path.join(database_dir, '期货', 'tick', 'ORIGIN_MERGE', variety)
         output_fp = os.path.join(database_dir, '期货', 'tick', 'ZL', variety)
-        if len(factor_name) > 0:
+        if len(factor_name) != '_':
             input_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ORIGIN_MERGE', variety)
             output_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ZL', variety)
         zl_info_fp = os.path.join(database_dir, '期货', 'base_data', 'zl_data')
