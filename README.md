@@ -39,6 +39,8 @@ Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120'
 from c3qts.core.merge import Merge
 # 合并行情数据
 Merge.append_zl_tick_data(variety='AG', date_='2023-03-11')
+# 拼合因子数据
+Merge.append_zl_tick_data(variety='AG', date_='2023-03-11', factor_name='active_trade_long_ratio_120', author='LRay')
 ```
 这里需要注意的是，如若传入日期`date_`早于已有数据的最晚日期，则取消拼合，显示错误：
 ```log

@@ -97,12 +97,14 @@ class Merge:
     如果不更新合约则只更新日期；如果更新合约则根据日期读取上一个合约
     '''
     @staticmethod
-    def merge_zl_tick_data(variety, factor_name=''):
+    def merge_zl_tick_data(variety, factor_name='', author=''):
+        # 修改因子名称为因子_作者名
+        factor_name = f'{factor_name}_{author}'
         database_dir = SETTINGS['database.basedir']
         # 读取数据
         input_fp = os.path.join(database_dir, '期货', 'tick', 'ORIGIN_MERGE', variety)
         output_fp = os.path.join(database_dir, '期货', 'tick', 'ZL', variety)
-        if len(factor_name) > 0:
+        if len(factor_name) != '_':
             input_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ORIGIN_MERGE', variety)
             output_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ZL', variety)
         zl_info_fp = os.path.join(database_dir, '期货', 'base_data', 'zl_data')
