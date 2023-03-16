@@ -1,7 +1,7 @@
 '''
 TODO: 由直接写入改为通过数据接口写入
 '''
-import os
+import os, stat
 from tqdm import tqdm
 from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper, RUNTYPE, FUTURE_ORIGIN_CONF
 from c3qts.core.settings import SETTINGS
@@ -34,7 +34,7 @@ class Merge:
         # 读取数据(后面更改为使用future_storage工具)
         input_fp = os.path.join(database_dir, '期货', 'tick', 'ORIGIN_MERGE', variety)
         output_fp = os.path.join(database_dir, '期货', 'tick', 'ZL', variety)
-        if len(factor_name) != '_':
+        if len(factor_name) > 1:
             input_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ORIGIN_MERGE', variety)
             output_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ZL', variety)
         zl_info_fp = os.path.join(database_dir, '期货', 'base_data', 'zl_data')
@@ -86,6 +86,7 @@ class Merge:
             logger.error(f'品种{variety}的主力合约Tick数据为空')
             return False
         fo_h5.save(os.path.join(output_fp, f'{variety}.h5'), curr_merge_data, index=curr_merge_index)
+        os.chmod(output_fp, stat.S_IRWXU | stat.S_IRWXG)
         # np.savetxt('测试.csv', curr_merge_data, delimiter=',')
         logger.info(f'{date_}: 品种{variety}的主力合约Tick数据合并成功')
         # Broadcast.log_content += f'品种{variety}的主力合约Tick数据合并成功\n'
@@ -108,7 +109,7 @@ class Merge:
         # 读取数据
         input_fp = os.path.join(database_dir, '期货', 'tick', 'ORIGIN_MERGE', variety)
         output_fp = os.path.join(database_dir, '期货', 'tick', 'ZL', variety)
-        if len(factor_name) != '_':
+        if len(factor_name) > 1:
             input_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ORIGIN_MERGE', variety)
             output_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ZL', variety)
         zl_info_fp = os.path.join(database_dir, '期货', 'base_data', 'zl_data')
@@ -187,6 +188,7 @@ class Merge:
             logger.error(f'品种{variety}的主力合约Tick数据为空')
             return False
         fo_h5.save(os.path.join(output_fp, f'{variety}.h5'), merge_data, index=merge_index)
+        os.chmod(output_fp, stat.S_IRWXU | stat.S_IRWXG)
         # np.savetxt('测试.csv', merge_data, delimiter=',')
         logger.info(f'品种{variety}的主力合约Tick数据合并成功')
         # Broadcast.log_content += f'品种{variety}的主力合约Tick数据合并成功\n'
@@ -230,6 +232,7 @@ class Merge:
         if os.path.exists(os.path.join(output_fp, f'{sym}.h5')):
             os.remove(os.path.join(output_fp, f'{sym}.h5'))
         fo_h5.save(os.path.join(output_fp, f'{sym}.h5'), merge_data, index=merge_index)
+        os.chmod(output_fp, stat.S_IRWXU | stat.S_IRWXG)
         logger.info(f'合约{sym}的Tick数据合并成功')
         # Broadcast.log_content += f'合约{sym}的Tick数据合并成功\n'
         return True

@@ -84,12 +84,13 @@ class JsonHelper:
 
 class H5Helper:
     def __init__(self, conf=None) -> None:
-        self.conf = conf
-        if conf is not None:
-            if 'name' not in conf or 'field_name' not in conf or 'version' not in conf:
-                logger.error(
-                    f"日志配置必须包含'name' / 'field_name' / 'version' 等字段. 目前conf={conf}"
-                )
+        # self.conf = conf
+        # if conf is not None:
+        #     if 'name' not in conf or 'field_name' not in conf or 'version' not in conf:
+        #         logger.error(
+        #             f"日志配置必须包含'name' / 'field_name' / 'version' 等字段. 目前conf={conf}"
+        #         )
+        return
 
     def save(self, filename, data, index=None, append=False):
         if append:
@@ -110,13 +111,14 @@ class H5Helper:
             with h5py.File(name=filename, mode="w") as h5_file:
                 maxshape_ds = [None] +  [x for x in data.shape[1:]]
                 maxshape_index = [None]
-                if self.conf is not None:
-                    h5_file.create_dataset(name="ds", data=data, maxshape=maxshape_ds, chunks=True, compression="gzip", dtype=float)
-                    h5_file['ds'].attrs["field_name"] = self.conf["field_name"]
-                    h5_file['ds'].attrs["version"] = self.conf["version"]
-                    if index is not None:
-                        h5_file.create_dataset(name="index", data=index, maxshape=maxshape_index, chunks=True, compression="gzip", dtype=int)
-                else:
+                # if self.conf is not None:
+                #     h5_file.create_dataset(name="ds", data=data, maxshape=maxshape_ds, chunks=True, compression="gzip", dtype=float)
+                #     h5_file['ds'].attrs["field_name"] = self.conf["field_name"]
+                #     h5_file['ds'].attrs["version"] = self.conf["version"]
+                #     if index is not None:
+                #         h5_file.create_dataset(name="index", data=index, maxshape=maxshape_index, chunks=True, compression="gzip", dtype=int)
+                # else:
+                if True:
                     h5_file.create_dataset(name="ds", data=data, maxshape=maxshape_ds, chunks=True, compression="gzip", dtype=float)
                     if index is not None:
                         h5_file.create_dataset(name="index", data=index, maxshape=maxshape_index, chunks=True, compression="gzip", dtype=int)
@@ -135,29 +137,29 @@ class H5Helper:
             index = None
             if 'index' in h5_file.keys():
                 index = h5_file['index']
-            if check is not None and self.conf is not None:
-                check = check.lower()
-                if 'field_name' not in data.attrs:
-                    logger.error(
-                        f"{filename} 的 attrs 没有字段信息. f{data.attrs.keys()}")
-                    return None, None
-                if check == "quick":
-                    if len(data.attrs['field_name']) != len(
-                            self.conf['field_name']):
-                        logger.error(f"""{filename} 的字段数量与配置文件中指定的字段数量对不上. 
-                            文件中: {len(data.attrs['field_name'])}.
-                            配置中:{len(self.conf['field_name'])}""")
-                        return None, None
-                elif check == "debug":
-                    if 'version' not in data.attrs:
-                        logger.error(f"{filename} 没有 version 信息")
-                        return None, None
-                    if version.parse(data.attrs['version']) > version.parse(
-                            self.conf['version']):
-                        logger.error(
-                            f"版本不兼容. {filename}版本为 {data.attrs['version']}. 配置文件中版本为{self.conf['version']}"
-                        )
-                        return None, None
+            # if check is not None and self.conf is not None:
+            #     check = check.lower()
+            #     if 'field_name' not in data.attrs:
+            #         logger.error(
+            #             f"{filename} 的 attrs 没有字段信息. f{data.attrs.keys()}")
+            #         return None, None
+            #     if check == "quick":
+            #         if len(data.attrs['field_name']) != len(
+            #                 self.conf['field_name']):
+            #             logger.error(f"""{filename} 的字段数量与配置文件中指定的字段数量对不上. 
+            #                 文件中: {len(data.attrs['field_name'])}.
+            #                 配置中:{len(self.conf['field_name'])}""")
+            #             return None, None
+            #     elif check == "debug":
+            #         if 'version' not in data.attrs:
+            #             logger.error(f"{filename} 没有 version 信息")
+            #             return None, None
+            #         if version.parse(data.attrs['version']) > version.parse(
+            #                 self.conf['version']):
+            #             logger.error(
+            #                 f"版本不兼容. {filename}版本为 {data.attrs['version']}. 配置文件中版本为{self.conf['version']}"
+            #             )
+            #             return None, None
 
             index_data = None
             if index is not None:
