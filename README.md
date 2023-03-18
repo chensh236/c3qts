@@ -38,13 +38,13 @@ Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120'
 ```python
 from c3qts.core.merge import Merge
 # 合并行情数据
-Merge.append_zl_tick_data(variety='AG', date_='2023-03-11')
+Merge.append_zl_tick_data(variety='AG', date_='20230311')
 # 拼合因子数据
-Merge.append_zl_tick_data(variety='AG', date_='2023-03-11', factor_name='active_trade_long_ratio_120', author='LRay')
+Merge.append_zl_tick_data(variety='AG', date_='20230311', factor_name='active_trade_long_ratio_120', author='LRay')
 ```
 这里需要注意的是，如若传入日期`date_`早于已有数据的最晚日期，则取消拼合，显示错误：
 ```log
-2023-03-13 16:16:28.228 | ERROR    | c3qts.core.merge:append_zl_tick_data:52 - 传入日期20230311早于或等于存储的最后日期20230311
+2023-03-13 16:16:28.228 | ERROR    | c3qts.core.merge:append_zl_tick_data:52  传入日期20230311早于或等于存储的最后日期20230311
 ```
 #### 原始合约数据的拼合
 现完成全部原始合约的数据拼合：

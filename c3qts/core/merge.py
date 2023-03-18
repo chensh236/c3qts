@@ -22,14 +22,14 @@ class Merge:
         database_dir = SETTINGS['database.basedir']
         # 如若date为空，则设置为当天日期
         if isinstance(date_, int):
-            logger.error(f'{date_}日期格式错误，应为YYYY-MM-DD')
+            date_ = str(date_)
         if len(date_) == 0:
-            date_ = date.today().strftime("%Y-%m-%d")
+            date_ = date.today().strftime("%Y%m%d")
         else:
             try:
-                _ = datetime.strptime(date_, "%Y-%m-%d")
+                _ = datetime.strptime(date_, "%Y%m%d")
             except ValueError:
-                logger.error(f"日期{date_}的格式错误")
+                logger.error(f"日期{date_}的格式错误，应为YYYYMMDD")
                 return False
         # 读取数据(后面更改为使用future_storage工具)
         input_fp = os.path.join(database_dir, '期货', 'tick', 'ORIGIN_MERGE', variety)
@@ -91,6 +91,20 @@ class Merge:
         logger.info(f'{date_}: 品种{variety}的主力合约Tick数据合并成功')
         # Broadcast.log_content += f'品种{variety}的主力合约Tick数据合并成功\n'
         return True
+    
+    @staticmethod
+    def sub_merge_zl_data(input_fp, last_sym, dt_int_start, dt_int_end, merge_data, merge_index):
+        data, index = fo_h5.load(os.path.join(input_fp, f'{last_sym}.h5'), start=dt_int_start, end=dt_int_end)
+        if data is not None:
+            if merge_data is None:
+                merge_data = data
+            else:
+                merge_data = np.vstack([merge_data, data])
+            if merge_index is None:
+                merge_index = index
+            else:
+                merge_index = np.hstack([merge_index, index])
+        return merge_data, merge_index
     
     # 合并主力tick数据
     '''
@@ -157,31 +171,13 @@ class Merge:
                 # 同一合约时跳过
                 last_sym = curr_sym
             else:
-                data, index = fo_h5.load(os.path.join(input_fp, f'{last_sym}.h5'), start=dt_int_start, end=dt_int_end)
-                if data is not None:
-                    if merge_data is None:
-                        merge_data = data
-                    else:
-                        merge_data = np.vstack([merge_data, data])
-                    if merge_index is None:
-                        merge_index = index
-                    else:
-                        merge_index = np.hstack([merge_index, index])
+                merge_data, merge_index = Merge.sub_merge_zl_data(input_fp, last_sym, dt_int_start, dt_int_end, merge_data, merge_index)
                 dt_int_start = curr_dt_int_start
                 dt_int_end = curr_dt_int_end         
                 last_sym = curr_sym
             # TODO: 下面的代码与上面重复，屎，有空改
             if idx == len(zl_info_date_list) - 1:
-                data, index = fo_h5.load(os.path.join(input_fp, f'{curr_sym}.h5'), start=dt_int_start, end=dt_int_end)
-                if data is not None:
-                    if merge_data is None:
-                        merge_data = data
-                    else:
-                        merge_data = np.vstack([merge_data, data])
-                    if merge_index is None:
-                        merge_index = index
-                    else:
-                        merge_index = np.hstack([merge_index, index])            
+                merge_data, merge_index = Merge.sub_merge_zl_data(input_fp, last_sym, dt_int_start, dt_int_end, merge_data, merge_index)
         if os.path.exists(os.path.join(output_fp, f'{variety}.h5')):
             os.remove(os.path.join(output_fp, f'{variety}.h5'))
         if merge_data is None or merge_data.shape[0] == 0:
