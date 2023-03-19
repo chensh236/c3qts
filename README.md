@@ -55,4 +55,4 @@ Merge.merge_tick_data(variety='AG', sym='AG2301'):
 ## 版本更新
 20221030 在h5读取/保存时添加索引列的数据
 20230313 增加merge功能，合并主力数据
-20230315 修改merge_zl_tick_data的借口，factor_name改为factor_name加author
+20230315 修改merge_zl_tick_data的接口，factor_name改为factor_name加author
