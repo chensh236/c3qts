@@ -34,6 +34,7 @@ Merge.merge_zl_tick_data(variety='AG')
 Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120', author='LRay')
 ```
 需要注意的是，这里的主力合约判断方法沿用Tinysoft的判断方法，即使用成交量最大的合约作为次日主力合约。
+
 2. 拼合特定日的主力合约数据（包括因子数据）:
 ```python
 from c3qts.core.merge import Merge
