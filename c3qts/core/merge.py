@@ -10,6 +10,7 @@ from c3qts.core.constant import VarietyMap
 from datetime import date, datetime, timedelta
 # from c3qts_request.request_util import get_variety
 import numpy as np
+from pathlib import Path
 
 class Merge:
     @staticmethod
@@ -59,7 +60,11 @@ class Merge:
         # 读取传入日期的主力合约信息
         # 这里的date是YYYYMMDD而不是YYYY-MM-DD，需要进行更改
         date_ = date_[:4] + '-' + date_[4:6] + '-' + date_[6:]
-        df = pkl_helper.load(os.path.join(zl_info_fp, f'{date_}.h5'))
+        try:
+            df = pkl_helper.load(os.path.join(zl_info_fp, f'{date_}.h5'))
+        except FileNotFoundError:
+            logger.error(f'日期{date_}不存在主力合约信息，检查该日是否为交易日')
+            return False
         df.index = df['主力代码']
         variety_code = eval(f'VarietyMap.{variety}.value')
         if variety_code not in df.index:
@@ -96,8 +101,8 @@ class Merge:
         return True
     
     @staticmethod
-    def sub_merge_zl_data(input_fp, last_sym, dt_int_start, dt_int_end, merge_data, merge_index):
-        data, index = fo_h5.load(os.path.join(input_fp, f'{last_sym}.h5'), start=dt_int_start, end=dt_int_end)
+    def sub_merge_zl_data(input_path: Path, last_sym: str, dt_int_start: int, dt_int_end: int, merge_data, merge_index):
+        data, index = fo_h5.load(input_path / f'{last_sym}.h5', start=dt_int_start, end=dt_int_end)
         if data is not None:
             if merge_data is None:
                 merge_data = data
@@ -122,14 +127,14 @@ class Merge:
             logger.error(f'因子{factor_name}, 作者{author}缺乏其中一个必要元素')
         # 修改因子名称为因子_作者名
         factor_name = f'{factor_name}_{author}'
-        database_dir = SETTINGS['database.basedir']
+        database_dir = Path(SETTINGS['database.basedir'])
         # 读取数据
-        input_fp = os.path.join(database_dir, '期货', 'tick', 'ORIGIN_MERGE', variety)
-        output_fp = os.path.join(database_dir, '期货', 'tick', 'ZL', variety)
+        input_fp = database_dir / '期货' / 'tick' / 'ORIGIN_MERGE' / variety
+        output_fp = database_dir / '期货' / 'tick' / 'ZL' / variety
         if len(factor_name) > 1:
-            input_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ORIGIN_MERGE', variety)
-            output_fp = os.path.join(database_dir, '期货', '因子', factor_name, 'tick', 'ZL', variety)
-        zl_info_fp = os.path.join(database_dir, '期货', 'base_data', 'zl_data')
+            input_fp = database_dir / '期货' / '因子' / factor_name / 'tick' / 'ORIGIN_MERGE' / variety
+            output_fp = database_dir / '期货' / '因子' / factor_name / 'tick' / 'ZL' / variety
+        zl_info_fp = database_dir / '期货' / 'base_data' / 'zl_data'
         
         # 创建目录
         if not os.path.exists(output_fp):
@@ -147,6 +152,7 @@ class Merge:
         refresh = False
         # 记录上个合约
         last_sym = ''
+        
         # 是否仍为当前文件
         for idx, date_ in tqdm(enumerate(zl_info_date_list)):
             df = pkl_helper.load(os.path.join(zl_info_fp, date_))
@@ -178,7 +184,6 @@ class Merge:
                 dt_int_start = curr_dt_int_start
                 dt_int_end = curr_dt_int_end         
                 last_sym = curr_sym
-            # TODO: 下面的代码与上面重复，屎，有空改
             if idx == len(zl_info_date_list) - 1:
                 merge_data, merge_index = Merge.sub_merge_zl_data(input_fp, last_sym, dt_int_start, dt_int_end, merge_data, merge_index)
         if os.path.exists(os.path.join(output_fp, f'{variety}.h5')):
