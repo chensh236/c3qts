@@ -7,7 +7,7 @@ from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper, RUNTYPE, FUTURE_
 from c3qts.core.settings import SETTINGS
 from c3qts.core.constant import VarietyMap
 # from c3qts_request.broadcast import Broadcast
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 # from c3qts_request.request_util import get_variety
 import numpy as np
 
@@ -24,7 +24,8 @@ class Merge:
         if isinstance(date_, int):
             date_ = str(date_)
         if len(date_) == 0:
-            date_ = date.today().strftime("%Y%m%d")
+            today = date.today() - timedelta(days=1)
+            date_ = today.strftime("%Y%m%d")
         else:
             try:
                 _ = datetime.strptime(date_, "%Y%m%d")
@@ -48,14 +49,16 @@ class Merge:
                 curr_merge_data, curr_merge_index = fo_h5.load(os.path.join(output_fp, f'{variety}.h5'))
             else:
                 logger.info(f'{date_} - 品种{variety}不存在数据')
-        dt_int = date_.replace('-', '')
+        dt_int = int(date_)
         # 判断传入日期的合法性
         if curr_merge_data is not None and curr_merge_data.shape[0] > 0:
             last_dt_int = int(curr_merge_data[-1, 0])
-            if last_dt_int >= int(dt_int):
+            if last_dt_int >= dt_int:
                 logger.error(f'传入日期{dt_int}早于或等于存储的最后日期{last_dt_int}')
                 return False 
         # 读取传入日期的主力合约信息
+        # 这里的date是YYYYMMDD而不是YYYY-MM-DD，需要进行更改
+        date_ = date_[:4] + '-' + date_[4:6] + '-' + date_[6:]
         df = pkl_helper.load(os.path.join(zl_info_fp, f'{date_}.h5'))
         df.index = df['主力代码']
         variety_code = eval(f'VarietyMap.{variety}.value')

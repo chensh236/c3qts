@@ -35,6 +35,8 @@ def worker(variety):
     return False 拼接出错
     '''
     Merge.merge_zl_tick_data(variety=variety, factor_name='')
+    # Merge.append_zl_tick_data(variety=variety, factor_name='')
+    # Merge.append_zl_tick_data(variety='AG', date_='20230323')
     '''
     如果是拼接因子数据，现版本需要手动输入因子名_窗口_作者，之后在上层叠加接口实现。
     如果factor_name为''则表示拼接行情数据；
