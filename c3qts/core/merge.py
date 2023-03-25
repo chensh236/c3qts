@@ -45,18 +45,30 @@ class Merge:
         if not os.path.exists(output_fp):
             os.makedirs(output_fp)
         else:
+            # 读取是否正常
+            flag = True
             if os.path.exists(os.path.join(output_fp, f'{variety}.h5')):
                 # 如若已存在文件则读取文件
                 curr_merge_data, curr_merge_index = fo_h5.load(os.path.join(output_fp, f'{variety}.h5'))
+                # 数据为空
+                if curr_merge_data is None or curr_merge_data.shape[0] == 0:
+                    flag = False
             else:
-                logger.info(f'{date_} - 品种{variety}不存在数据')
+                flag = False
+            if not flag:
+                logger.error(f'{date_} - 品种{variety}不存在数据')
+                return False
         dt_int = int(date_)
         # 判断传入日期的合法性
         if curr_merge_data is not None and curr_merge_data.shape[0] > 0:
-            last_dt_int = int(curr_merge_data[-1, 0])
+            # 因为curr_merge_data是个一维或二维数组
+            if len(curr_merge_data.shape) == 1:
+                last_dt_int = int(curr_merge_data[-1])
+            else:
+                last_dt_int = int(curr_merge_data[-1, 0])
             if last_dt_int >= dt_int:
                 logger.error(f'传入日期{dt_int}早于或等于存储的最后日期{last_dt_int}')
-                return False 
+                return False
         # 读取传入日期的主力合约信息
         # 这里的date是YYYYMMDD而不是YYYY-MM-DD，需要进行更改
         date_ = date_[:4] + '-' + date_[4:6] + '-' + date_[6:]
