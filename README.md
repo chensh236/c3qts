@@ -102,7 +102,7 @@ Merge.append_zl_tick_data(variety='AG', date_='20230101', factor_name='Factor1',
 #### append_zl_tick_data
 
 ```python
-from c3qts.core.merge import Merge
+from c3qts_request.merge import Merge
 sub_merge_zl_data(input_path: Path, last_sym: str, dt_int_start: int, dt_int_end: int, merge_data, merge_index)
 ```
 
@@ -135,7 +135,7 @@ author (str)：作者名，默认为空。
 使用方法：
 
 ```python
-from c3qts.core.merge import Merge
+from c3qts_request.merge import Merge
 Merge.merge_zl_tick_data(variety='IF', factor_name='Factor1', author='Author1')
 ```
 
@@ -222,7 +222,7 @@ from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper
 现有主力合约数据拼合有两个功能：
 1. 拼合所有的主力合约数据（包括因子数据）：
 ```python
-from c3qts.core.merge import Merge
+from c3qts_request.merge import Merge
 # 拼合行情数据
 Merge.merge_zl_tick_data(variety='AG')
 # 拼合因子数据
@@ -232,7 +232,7 @@ Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120'
 
 2. 拼合特定日的主力合约数据（包括因子数据）:
 ```python
-from c3qts.core.merge import Merge
+from c3qts_request.merge import Merge
 # 合并行情数据
 Merge.append_zl_tick_data(variety='AG', date_='20230311')
 # 拼合因子数据
