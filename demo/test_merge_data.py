@@ -7,7 +7,7 @@ import os
 from c3qts.core.util import JsonHelper
 from c3qts.core.util import logger, fo_h5
 from c3qts.core.settings import SETTINGS
-from c3qts_request.merge import Merge
+from c3qts.core.merge import Merge
 SETTINGS['database.basedir'] = '/14T/dev_database_factor/'
 SETTINGS['tinysoft.username'] = 'sysbsquant'
 SETTINGS['tinysoft.password'] = '123581'
