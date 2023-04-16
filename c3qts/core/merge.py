@@ -1,26 +1,22 @@
-'''
-TODO: 由直接写入改为通过数据接口写入
-'''
 import os, stat
 from tqdm import tqdm
 from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper, RUNTYPE, FUTURE_ORIGIN_CONF
-from c3qts.core.settings import SETTINGS
 from c3qts.core.constant import VarietyMap
 # from c3qts_request.broadcast import Broadcast
 from datetime import date, datetime, timedelta
 # from c3qts_request.request_util import get_variety
 import numpy as np
 from pathlib import Path
-
+from c3qts.core.settings import SETTINGS
 class Merge:
     @staticmethod
     # 追加最新的tick数据
-    def append_zl_tick_data(variety: str, date_:str ='', factor_name:str ='', author:str =''):
+    def append_zl_tick_data(database_dir: str, variety: str, date_:str ='', factor_name:str ='', author:str =''):
         # 修改因子名称为因子_作者名
         if len(factor_name) > 0 and len(author) == 0 or len(factor_name) == 0 and len(author) > 0:
             logger.error(f'因子{factor_name}, 作者{author}缺乏其中一个必要元素')
         factor_name = f'{factor_name}_{author}'
-        database_dir = SETTINGS['database.basedir']
+        # database_dir = database_dir
         # 如若date为空，则设置为当天日期
         if isinstance(date_, int):
             date_ = str(date_)
@@ -102,7 +98,10 @@ class Merge:
     
     @staticmethod
     def sub_merge_zl_data(input_path: Path, last_sym: str, dt_int_start: int, dt_int_end: int, merge_data, merge_index):
-        data, index = fo_h5.load(input_path / f'{last_sym}.h5', start=dt_int_start, end=dt_int_end)
+        try:
+            data, index = fo_h5.load(input_path / f'{last_sym}.h5', start=dt_int_start, end=dt_int_end)
+        except FileNotFoundError as e:
+            data, index = None, None
         if data is not None:
             if merge_data is None:
                 merge_data = data
@@ -122,12 +121,12 @@ class Merge:
     如果不更新合约则只更新日期；如果更新合约则根据日期读取上一个合约
     '''
     @staticmethod
-    def merge_zl_tick_data(variety: str, factor_name:str ='', author:str =''):
+    def merge_zl_tick_data(database_dir: str, variety: str, factor_name:str ='', author:str =''):
         if len(factor_name) > 0 and len(author) == 0 or len(factor_name) == 0 and len(author) > 0:
             logger.error(f'因子{factor_name}, 作者{author}缺乏其中一个必要元素')
         # 修改因子名称为因子_作者名
         factor_name = f'{factor_name}_{author}'
-        database_dir = Path(SETTINGS['database.basedir'])
+        database_dir = Path(database_dir)
         # 读取数据
         input_fp = database_dir / '期货' / 'tick' / 'ORIGIN_MERGE' / variety
         output_fp = database_dir / '期货' / 'tick' / 'ZL' / variety
@@ -204,27 +203,31 @@ class Merge:
         return False
     
     @staticmethod
-    def merge_tick_data(variety: str, sym:str):
-        database_dir = SETTINGS['database.basedir']
+    def merge_tick_data(database_dir: str, variety: str, sym:str):
+        # database_dir = database_dir
         # 读取数据
         input_fp = os.path.join(database_dir, '期货/tick/ORIGIN', variety, sym)
         output_fp = os.path.join(database_dir, '期货/tick/ORIGIN_MERGE', variety)
         if not os.path.exists(input_fp):
-            logger.error(f'合约{sym}的Tick数据不存在')
+            logger.error(f'合约{sym}的Tick数据不存在, 路径:{input_fp}')
             # Broadcast.log_content += f'合约{sym}的Tick数据不存在\n'
             return False
         if not os.path.exists(output_fp):
             os.makedirs(output_fp)
         file_list = os.listdir(input_fp)
         if len(file_list) == 0:
-            logger.error(f'合约{sym}的Tick数据不存在')
+            logger.error(f'合约{sym}的Tick数据列表为空, 路径:{input_fp}')
             # Broadcast.log_content += f'合约{sym}的Tick数据不存在\n'
             return False
         file_list.sort()
         merge_data = None
         merge_index = None
         for filename in file_list:
-            data, index = fo_h5.load(os.path.join(input_fp, filename))
+            load_path = os.path.join(input_fp, filename)
+            if not os.path.exists(load_path):
+                logger.error(f'路径{load_path}不存在')
+                continue
+            data, index = fo_h5.load(load_path)
             if merge_data is None:
                 merge_data = data
             else:

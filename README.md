@@ -79,7 +79,7 @@ core/util.py
 #### append_zl_tick_data
 
 ```python
-append_zl_tick_data(variety: str, date_: str = '', factor_name: str = '', author: str = '')
+append_zl_tick_data(database_dir: str, variety: str, date_: str = '', factor_name: str = '', author: str = '')
 ```
 功能：追加最新的主力合约Tick数据。
 
@@ -92,7 +92,7 @@ author (str)：作者名，默认为空。
 使用方法：
 
 ```python
-Merge.append_zl_tick_data(variety='AG', date_='20230101', factor_name='Factor1', author='Author1')
+Merge.append_zl_tick_data(database_dir: str, variety='AG', date_='20230101', factor_name='Factor1', author='Author1')
 ```
 这里需要注意的是，如若传入日期`date_`早于已有数据的最晚日期，则取消拼合，显示错误：
 ```log
@@ -122,7 +122,7 @@ merge_index：合并后的索引。
 #### merge_zl_tick_data
 
 ```python
-merge_zl_tick_data(variety: str, factor_name: str = '', author: str = '')
+merge_zl_tick_data(database_dir: str, variety: str, factor_name: str = '', author: str = '')
 ```
 
 功能：合并主力合约Tick数据。
@@ -136,13 +136,13 @@ author (str)：作者名，默认为空。
 
 ```python
 from c3qts.core.merge import Merge
-Merge.merge_zl_tick_data(variety='IF', factor_name='Factor1', author='Author1')
+Merge.merge_zl_tick_data(database_dir, variety='IF', factor_name='Factor1', author='Author1')
 ```
 
 #### merge_zl_daily_data (未完成)
 
 ```python
-merge_zl_daily_data(variety)
+merge_zl_daily_data(database_dir: str, variety)
 ```
 
 功能：合并主力合约日频率数据。
@@ -153,14 +153,14 @@ variety (str)：品种，例如：'AG'。
 使用方法：
 
 ```python
-Merge.merge_zl_daily_data(variety='AG')
+Merge.merge_zl_daily_data(database_dir, variety='AG')
 ```
 注意：此方法尚未实现，返回 False。
 
 #### merge_tick_data
 
 ```python
-merge_tick_data(variety: str, sym: str)
+merge_tick_data(database_dir: str, variety: str, sym: str)
 ```
 
 功能：该函数用于拼合原始的主力合约（只针对于`ContractType.ORI`），场景是每日的定时获取
@@ -172,7 +172,7 @@ sym (str)：合约符号，例如：'AG2101'。
 使用方法：
 
 ```python
-Merge.merge_tick_data(variety='AG', sym='AG2101')
+Merge.merge_tick_data(database_dir, variety='AG', sym='AG2101')
 ```
 
 ### settings
@@ -224,9 +224,9 @@ from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper
 ```python
 from c3qts.core.merge import Merge
 # 拼合行情数据
-Merge.merge_zl_tick_data(variety='AG')
+Merge.merge_zl_tick_data(database_dir, variety='AG')
 # 拼合因子数据
-Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120', author='LRay')
+Merge.merge_zl_tick_data(database_dir, variety='AG', factor_name='active_trade_long_ratio_120', author='LRay')
 ```
 需要注意的是，这里的主力合约判断方法沿用Tinysoft的判断方法，即使用成交量最大的合约作为次日主力合约。
 
@@ -234,15 +234,15 @@ Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120'
 ```python
 from c3qts.core.merge import Merge
 # 合并行情数据
-Merge.append_zl_tick_data(variety='AG', date_='20230311')
+Merge.append_zl_tick_data(database_dir: str, variety='AG', date_='20230311')
 # 拼合因子数据
-Merge.append_zl_tick_data(variety='AG', date_='20230311', factor_name='active_trade_long_ratio_120', author='LRay')
+Merge.append_zl_tick_data(database_dir: str, variety='AG', date_='20230311', factor_name='active_trade_long_ratio_120', author='LRay')
 ```
 
 #### 原始合约数据的拼合
 现完成全部原始合约的数据拼合：
 ```python
-Merge.merge_tick_data(variety='AG', sym='AG2301'):
+Merge.merge_tick_data(database_dir, variety='AG', sym='AG2301'):
 ```
 
 ## 版本更新
