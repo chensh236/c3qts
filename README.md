@@ -218,34 +218,8 @@ pkl_helper = PKLHelper()
 from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper
 ```
 
-#### 主力合约数据的拼合
-现有主力合约数据拼合有两个功能：
-1. 拼合所有的主力合约数据（包括因子数据）：
-```python
-from c3qts_request.merge import Merge
-# 拼合行情数据
-Merge.merge_zl_tick_data(variety='AG')
-# 拼合因子数据
-Merge.merge_zl_tick_data(variety='AG', factor_name='active_trade_long_ratio_120', author='LRay')
-```
-需要注意的是，这里的主力合约判断方法沿用Tinysoft的判断方法，即使用成交量最大的合约作为次日主力合约。
-
-2. 拼合特定日的主力合约数据（包括因子数据）:
-```python
-from c3qts_request.merge import Merge
-# 合并行情数据
-Merge.append_zl_tick_data(variety='AG', date_='20230311')
-# 拼合因子数据
-Merge.append_zl_tick_data(variety='AG', date_='20230311', factor_name='active_trade_long_ratio_120', author='LRay')
-```
-
-#### 原始合约数据的拼合
-现完成全部原始合约的数据拼合：
-```python
-Merge.merge_tick_data(variety='AG', sym='AG2301'):
-```
-
 ## 版本更新
 20221030 在h5读取/保存时添加索引列的数据
 20230313 增加merge功能，合并主力数据
 20230315 修改merge_zl_tick_data的接口，factor_name改为factor_name加author
+20230416 删除merge
