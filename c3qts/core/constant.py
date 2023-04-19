@@ -167,8 +167,8 @@ class Interval(Enum):
     MIN_20 = "20m"
     MIN_30 = "30m"
     HOUR = "1h"
-    DAILY = "d"
-    WEEKLY = "w"
+    DAILY = "day"
+    WEEKLY = "week"
     TICK = "tick"
 
 class ContractType(Enum):

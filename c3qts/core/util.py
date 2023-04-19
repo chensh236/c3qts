@@ -164,10 +164,15 @@ class H5Helper:
             index_data = None
             if index is not None:
                 index_data = index[()]
+            # print(np.where((index_data >= start)&(index_data <= end))[0])
             if start is None or end is None:
                 return data[()], index_data
             else:
                 row_index = np.where((index_data >= start)&(index_data <= end))[0]
+                # 找不到目标数据
+                if len(row_index) == 0:
+                    logger.error(f'{filename}: {start}至{end}找不到数据')
+                    return (None, None, )
                 start_index, end_index = int(row_index[0]), int(row_index[-1] + 1)
                 return data[start_index : end_index], index_data[start_index : end_index]
 

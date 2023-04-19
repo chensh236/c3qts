@@ -1,4 +1,4 @@
-import os, stat
+import os, stat, threading
 from tqdm import tqdm
 from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper, RUNTYPE, FUTURE_ORIGIN_CONF
 from c3qts.core.constant import VarietyMap
@@ -9,6 +9,7 @@ import numpy as np
 from pathlib import Path
 from c3qts.core.settings import SETTINGS
 class Merge:
+    _makedirs_lock = threading.Lock()
     @staticmethod
     # 追加最新的tick数据
     def append_zl_tick_data(database_dir: str, variety: str, date_:str ='', factor_name:str ='', author:str =''):
@@ -38,14 +39,15 @@ class Merge:
         zl_info_fp = os.path.join(database_dir, '期货', 'base_data', 'zl_data')
         curr_merge_data, curr_merge_index = None, None
         # 创建目录
-        if not os.path.exists(output_fp):
-            os.makedirs(output_fp)
-        else:
-            if os.path.exists(os.path.join(output_fp, f'{variety}.h5')):
-                # 如若已存在文件则读取文件
-                curr_merge_data, curr_merge_index = fo_h5.load(os.path.join(output_fp, f'{variety}.h5'))
+        with Merge._makedirs_lock:
+            if not os.path.exists(output_fp):
+                os.makedirs(output_fp)
             else:
-                logger.info(f'{date_} - 品种{variety}不存在数据')
+                if os.path.exists(os.path.join(output_fp, f'{variety}.h5')):
+                    # 如若已存在文件则读取文件
+                    curr_merge_data, curr_merge_index = fo_h5.load(os.path.join(output_fp, f'{variety}.h5'))
+                else:
+                    logger.info(f'{date_} - 品种{variety}不存在数据')
         dt_int = int(date_)
         # 判断传入日期的合法性
         if curr_merge_data is not None and curr_merge_data.shape[0] > 0:
@@ -136,8 +138,9 @@ class Merge:
         zl_info_fp = database_dir / '期货' / 'base_data' / 'zl_data'
         
         # 创建目录
-        if not os.path.exists(output_fp):
-            os.makedirs(output_fp)
+        with Merge._makedirs_lock:
+            if not os.path.exists(output_fp):
+                os.makedirs(output_fp)
         # 获取最早日期
         zl_info_date_list = os.listdir(zl_info_fp)
         zl_info_date_list.sort()
@@ -198,7 +201,7 @@ class Merge:
         return True
     
     @staticmethod
-    def merge_zl_daily_data(variety):
+    def merge_zl_daily_data(database_dir: str, variety):
         # TODO: 合并主力合约日频率数据
         return False
     
@@ -212,8 +215,9 @@ class Merge:
             logger.error(f'合约{sym}的Tick数据不存在, 路径:{input_fp}')
             # Broadcast.log_content += f'合约{sym}的Tick数据不存在\n'
             return False
-        if not os.path.exists(output_fp):
-            os.makedirs(output_fp)
+        with Merge._makedirs_lock:
+            if not os.path.exists(output_fp):
+                os.makedirs(output_fp)
         file_list = os.listdir(input_fp)
         if len(file_list) == 0:
             logger.error(f'合约{sym}的Tick数据列表为空, 路径:{input_fp}')
