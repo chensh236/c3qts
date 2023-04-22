@@ -19,7 +19,7 @@ SETTINGS['tinysoft.server_port'] = 443
 SETTINGS['email.hostname'] = 'smtp.qq.com'
 SETTINGS['email.port'] = 465
 SETTINGS['email.username'] = '1466196675@qq.com'
-SETTINGS['email.password'] = 'ytgajdvqswubgcah'
+SETTINGS['email.password'] = 'atpimberokzhgaeh'
 SETTINGS['email.forward'] = '1466196675@qq.com'
 
 import ray
