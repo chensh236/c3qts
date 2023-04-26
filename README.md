@@ -196,10 +196,27 @@ get_settings(prefix: str = "") -> Dict[str, Any]：
 ```python
 from c3qts.core.settings import SETTINGS
 ```
-之后可以使用SETTINGS这个字典来编辑、保存参数，如：
+此时c3qts读取得到的参数是默认的参数，即：
+```json
+SETTINGS: Dict[str, Any] = {
+    "database.database": "future_seq_data",
+    "database.name": "localdb",
+}
+```
+之后可以使用SETTINGS这个字典来编辑参数，如：
 ```python
 SETTINGS['database.basedir'] = '/14T/dev_database_factor'
 ```
+
+如果有参数的读取和保存需求：
+```python
+from c3qts.core.settings import *
+```
+此时c3qts会从`~/.tmp/st_settings.json`中读取参数。如果需要保存，需语句：
+```python
+save_json(SETTING_FILENAME, SETTINGS)
+```
+即可完成参数的保存，路径在：`~/.tmp/st_settings.json`
 
 ### util
 

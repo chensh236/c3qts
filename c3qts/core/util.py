@@ -61,12 +61,13 @@ except Exception:
     print("日志库loguru没有安装,日志文件输出功能不可用. 使用 pip install loguru 安装.",
           file=sys.stderr)
 
-import yaml
-if not os.path.exists(os.path.join(TEMP_DIR, "future_origin_data.yaml")):
-    logger.error(f"应将期货原始数据的格式文件\"future_origin_data\"放置于目录 {TEMP_DIR}中")
-    exit()
-with open(os.path.join(TEMP_DIR, "future_origin_data.yaml"), "r", encoding="utf-8") as f:
-    FUTURE_ORIGIN_CONF = yaml.safe_load(f)
+# 取消校验文件，因为tick数据从天软获取是固定的
+# import yaml
+# if not os.path.exists(os.path.join(TEMP_DIR, "future_origin_data.yaml")):
+#     logger.error(f"应将期货原始数据的格式文件\"future_origin_data\"放置于目录 {TEMP_DIR}中")
+#     exit()
+# with open(os.path.join(TEMP_DIR, "future_origin_data.yaml"), "r", encoding="utf-8") as f:
+#     FUTURE_ORIGIN_CONF = yaml.safe_load(f)
 
 class JsonHelper:
     def __init__(self) -> None:
@@ -202,7 +203,8 @@ class PKLHelper:
             return pickle.load(f)
 
 # future origin data h5 helper
-fo_h5 = H5Helper(FUTURE_ORIGIN_CONF)
+# fo_h5 = H5Helper(FUTURE_ORIGIN_CONF)
+fo_h5 = H5Helper()
 base_h5 = H5Helper()
 pkl_helper = PKLHelper()
 RUNTYPE = "debug"

@@ -39,13 +39,14 @@ def load_json(filename: str) -> dict:
 SETTINGS: Dict[str, Any] = {
     "database.database": "future_seq_data",
     "database.name": "localdb",
-    "database.basedir":"/14T/dev_database"
+    # "database.basedir":"/14T/dev_database"
 }
 
 
 # Load global setting from json file.
 SETTING_FILENAME: str = "st_settings.json"
 SETTINGS.update(load_json(SETTING_FILENAME))
+# save_json(SETTING_FILENAME, SETTINGS)
 
 def get_settings(prefix: str = "") -> Dict[str, Any]:
     prefix_length = len(prefix)
