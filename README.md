@@ -48,8 +48,10 @@ c3qts核心模块在系统中发挥着关键作用，确保了整个系统的稳
 1. virtualenv  venv(创建虚拟环境)
 2. source venv/bin/activeate(激活虚拟环境)
 3. pip3 install -r requirements.txt(pip安装modules，仅第一次需要执行)
-4. 手动安装c3qts的相关组件。手动安装：进入文件夹里面，python3 setup.py install即可
-5. 将`conf/future_origin_data.yaml`复制到`home`目录的`.tmp`文件夹中
+
+自动安装：脚本路径为`demo/setup.sh` 
+手动安装：c3qts的相关组件。手动安装：进入文件夹里面，python3 setup.py install即可
+
 
 ## 函数解析
 ```
