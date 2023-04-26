@@ -1,6 +1,6 @@
 import os, stat, threading
 from tqdm import tqdm
-from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper, RUNTYPE, FUTURE_ORIGIN_CONF
+from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper, RUNTYPE
 from c3qts.core.constant import VarietyMap
 # from c3qts_request.broadcast import Broadcast
 from datetime import date, datetime, timedelta

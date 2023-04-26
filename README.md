@@ -4,7 +4,7 @@
 </p>
 
 <p align="center">
-    <img src ="https://img.shields.io/badge/version-0.0.1-blueviolet.svg"/>
+    <img src ="https://img.shields.io/badge/version-0.0.2-blueviolet.svg"/>
     <img src ="https://img.shields.io/badge/platform-windows|linux|macos-yellow.svg"/>
     <img src ="https://img.shields.io/badge/python-3.9-blue.svg" />
 </p>
@@ -227,7 +227,9 @@ save_json(SETTING_FILENAME, SETTINGS)
 常用三个变量：fo_h5, base_h5, pkl_helper以及实例`logger`的定义如下：
 ```python
 from loguru import logger
-fo_h5 = H5Helper(FUTURE_ORIGIN_CONF)
+# 原先添加校验文件，现在版本取消
+# fo_h5 = H5Helper(FUTURE_ORIGIN_CONF)
+fo_h5 = H5Helper()
 base_h5 = H5Helper()
 pkl_helper = PKLHelper()
 ```
