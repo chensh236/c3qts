@@ -103,6 +103,8 @@ class Merge:
         try:
             data, index = fo_h5.load(input_path / f'{last_sym}.h5', start=dt_int_start, end=dt_int_end)
         except FileNotFoundError as e:
+            file_path = input_path / f'{last_sym}.h5'
+            logger.error(f'路径:{file_path}读取的结果为空')
             data, index = None, None
         if data is not None:
             if merge_data is None:
@@ -114,21 +116,6 @@ class Merge:
             else:
                 merge_index = np.hstack([merge_index, index])
         return merge_data, merge_index
-    
-    '''
-    根据因子名称以及作者名称获得不同周期的因子列表
-    '''
-    @staticmethod
-    def get_factor_list(database_dir: str, variety: str, factor_name:str ='', author:str =''):
-        if len(factor_name) == 0 and len(author) == 0:
-            logger.error(f'因子{factor_name}, 作者{author}至少需要一个必要元素')
-            return None
-        database_dir = Path(database_dir)
-        input_fp = database_dir / '期货' / '因子'
-        file_list = os.listdir(input_fp)
-        file_list.sort()
-        file_list = [factor for factor in file_list if factor_name in factor and author in factor]
-        return file_list
     
     # 合并主力tick数据
     '''
