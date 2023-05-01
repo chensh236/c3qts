@@ -77,7 +77,31 @@ core/util.py
 - ExchangeMap：表示交易所与产品类型的映射关系。
 
 ### merge
-根据数据的特性，可将Merge模块分为主力合约数据、原始合约数据的拼合两个部分。
+根据数据的特性，可将Merge模块分为主力合约数据、原始合约数据的拼合两个部分。同时，为方便合并因子数据，_Merge类也包括因子的搜索功能_。
+
+#### get_factor_list
+```python
+@staticmethod
+def get_factor_list(database_dir: str, variety: str, factor_name: str = '', author: str = '')
+```
+功能：根据因子名称和作者名称，从数据库中获得不同周期的因子列表。
+
+参数：
+- database_dir (str)：数据库目录。
+- variety (str)：品种，例如：'AG'。
+- factor_name (str)：因子名称，默认为空。当因子名称和作者名称都为空时，将报错并返回None。
+- author (str)：作者名，默认为空。当因子名称和作者名称都为空时，将报错并返回None。
+
+返回值：
+- file_list：符合筛选条件的因子列表。
+
+使用方法：
+```python
+factor_list = Merge.get_factor_list(database_dir, variety='AG', factor_name='Factor1', author='Author1')
+```
+示例代码调用了 get_factor_list 函数，传入数据库目录、品种、因子名称和作者名称，函数将返回一个包含符合筛选条件的因子列表。如果因子名称和作者名称都为空，将会报错并返回None。
+
+
 #### append_zl_tick_data
 
 ```python
