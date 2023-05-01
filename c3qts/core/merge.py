@@ -1,7 +1,7 @@
 import os, stat, threading
 from tqdm import tqdm
 from c3qts.core.util import logger, fo_h5, base_h5, pkl_helper, RUNTYPE
-from c3qts.core.constant import VarietyMap
+from c3qts.core.constant import VarietyMap, ContractType
 # from c3qts_request.broadcast import Broadcast
 from datetime import date, datetime, timedelta
 # from c3qts_request.request_util import get_variety
@@ -115,6 +115,21 @@ class Merge:
                 merge_index = np.hstack([merge_index, index])
         return merge_data, merge_index
     
+    '''
+    根据因子名称以及作者名称获得不同周期的因子列表
+    '''
+    @staticmethod
+    def get_factor_list(database_dir: str, variety: str, factor_name:str ='', author:str =''):
+        if len(factor_name) == 0 and len(author) == 0:
+            logger.error(f'因子{factor_name}, 作者{author}至少需要一个必要元素')
+            return None
+        database_dir = Path(database_dir)
+        input_fp = database_dir / '期货' / '因子'
+        file_list = os.listdir(input_fp)
+        file_list.sort()
+        file_list = [factor for factor in file_list if factor_name in factor or author in factor]
+        return file_list
+    
     # 合并主力tick数据
     '''
     2023-03-06
@@ -124,15 +139,18 @@ class Merge:
     '''
     @staticmethod
     def merge_zl_tick_data(database_dir: str, variety: str, factor_name:str ='', author:str =''):
-        if len(factor_name) > 0 and len(author) == 0 or len(factor_name) == 0 and len(author) > 0:
-            logger.error(f'因子{factor_name}, 作者{author}缺乏其中一个必要元素')
+        # 因子名称factor_name可以不包括名称，也可以包括名称
+        if len(factor_name) == 0 and len(author) > 0:
+            logger.error(f'如若数据为因子，因子名称{factor_name}必须存在')
+            return False
         # 修改因子名称为因子_作者名
-        factor_name = f'{factor_name}_{author}'
         database_dir = Path(database_dir)
         # 读取数据
         input_fp = database_dir / '期货' / 'tick' / 'ORIGIN_MERGE' / variety
         output_fp = database_dir / '期货' / 'tick' / 'ZL' / variety
-        if len(factor_name) > 1:
+        if len(factor_name) > 0:
+            if len(author) > 0:
+                factor_name = f'{factor_name}_{author}'
             input_fp = database_dir / '期货' / '因子' / factor_name / 'tick' / 'ORIGIN_MERGE' / variety
             output_fp = database_dir / '期货' / '因子' / factor_name / 'tick' / 'ZL' / variety
         zl_info_fp = database_dir / '期货' / 'base_data' / 'zl_data'
