@@ -127,7 +127,7 @@ class Merge:
         input_fp = database_dir / '期货' / '因子'
         file_list = os.listdir(input_fp)
         file_list.sort()
-        file_list = [factor for factor in file_list if factor_name in factor or author in factor]
+        file_list = [factor for factor in file_list if factor_name in factor and author in factor]
         return file_list
     
     # 合并主力tick数据
