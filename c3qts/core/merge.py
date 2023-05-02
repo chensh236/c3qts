@@ -202,7 +202,10 @@ class Merge:
         print(os.path.join(output_fp, f'{variety}.h5'))
         os.chmod(output_fp, stat.S_IRWXU | stat.S_IRWXG)
         # np.savetxt('测试.csv', merge_data, delimiter=',')
-        logger.info(f'品种{variety}的主力合约Tick数据合并成功')
+        if len(factor_name) == 0:
+            logger.info(f'品种{variety}的主力合约Tick数据合并成功')
+        else:
+            logger.info(f'品种{variety}因子{factor_name}数据的主力合约Tick数据合并成功')
         # Broadcast.log_content += f'品种{variety}的主力合约Tick数据合并成功\n'
         return True
     
