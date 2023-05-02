@@ -104,7 +104,7 @@ class Merge:
             data, index = fo_h5.load(input_path / f'{last_sym}.h5', start=dt_int_start, end=dt_int_end)
         except FileNotFoundError as e:
             file_path = input_path / f'{last_sym}.h5'
-            logger.error(f'路径:{file_path}读取的结果为空')
+            logger.warning(f'路径:{file_path}读取的结果为空')
             data, index = None, None
         if data is not None:
             if merge_data is None:
@@ -199,6 +199,7 @@ class Merge:
             logger.error(f'品种{variety}的主力合约Tick数据为空')
             return False
         fo_h5.save(os.path.join(output_fp, f'{variety}.h5'), merge_data, index=merge_index)
+        print(os.path.join(output_fp, f'{variety}.h5'))
         os.chmod(output_fp, stat.S_IRWXU | stat.S_IRWXG)
         # np.savetxt('测试.csv', merge_data, delimiter=',')
         logger.info(f'品种{variety}的主力合约Tick数据合并成功')
