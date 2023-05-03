@@ -8,7 +8,7 @@ import json
 import pandas as pd
 import pickle
 import numpy as np
-
+from multiprocessing import Lock
 '''
 获得平台的文件夹
 '''
@@ -208,3 +208,4 @@ fo_h5 = H5Helper()
 base_h5 = H5Helper()
 pkl_helper = PKLHelper()
 RUNTYPE = "debug"
+process_lock = Lock()
