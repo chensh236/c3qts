@@ -237,7 +237,7 @@ class VarietyMap(Enum):
     RS = 'ZL000039'
     RM = 'ZL000031'
     JM = 'ZL000032'
-    bU = 'ZL000033'
+    BU = 'ZL000033'
     I = 'ZL000034'
     ZC = 'ZL000035'
     TC = 'ZL000035'
