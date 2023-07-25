@@ -271,6 +271,18 @@ class VarietyMap(Enum):
     BC = 'ZL000063'
     LH = 'ZL000064'
     PK = 'ZL000065'
+    SI = 'ZL000066'
+    AO = 'ZL000067'
+    LC = 'ZL000068'
+    IF = 'IF00'
+    IC = 'IC00'
+    IH = 'IH00'
+    IM = 'IM00'
+    T = 'T00'
+    TF = 'TF00'
+    TS = 'TS00'
+    
+    
 
 class ExchangeMap(Enum):
     """

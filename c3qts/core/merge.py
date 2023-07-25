@@ -225,8 +225,11 @@ class Merge:
             # Broadcast.log_content += f'合约{sym}的Tick数据不存在\n'
             return False
         with Merge._makedirs_lock:
-            if not os.path.exists(output_fp):
-                os.makedirs(output_fp)
+            try:
+                if not os.path.exists(output_fp):
+                    os.makedirs(output_fp)
+            except FileExistsError as e:
+                pass
         file_list = os.listdir(input_fp)
         if len(file_list) == 0:
             logger.error(f'合约{sym}的Tick数据列表为空, 路径:{input_fp}')
