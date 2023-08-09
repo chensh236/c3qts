@@ -259,3 +259,30 @@ class Merge:
         logger.info(f'合约{sym}的Tick数据合并成功')
         # Broadcast.log_content += f'合约{sym}的Tick数据合并成功\n'
         return True
+    
+    @staticmethod
+    def merge_tick_data(variety: str, sym: str):
+        database_dir = ''
+        if 'DATABASE_DIR' not in os.environ:
+            raise ValueError('环境变量中没有DATABASE_DIR')
+        else:
+            database_dir = os.environ['DATABASE_DIR']
+        Merge.merge_tick_data(database_dir, variety, sym)
+        
+    @staticmethod
+    def merge_zl_tick_data(variety: str, factor_name:str ='', author:str =''):
+        database_dir = ''
+        if 'DATABASE_DIR' not in os.environ:
+            raise ValueError('环境变量中没有DATABASE_DIR')
+        else:
+            database_dir = os.environ['DATABASE_DIR']
+        Merge.merge_zl_tick_data(database_dir, variety, factor_name, author)
+    
+    @staticmethod
+    def append_zl_tick_data(variety: str, date_:str ='', factor_name:str ='', author:str =''):
+        database_dir = ''
+        if 'DATABASE_DIR' not in os.environ:
+            raise ValueError('环境变量中没有DATABASE_DIR')
+        else:
+            database_dir = os.environ['DATABASE_DIR']
+        Merge.merge_tick_data(database_dir, variety, date_, factor_name, author)

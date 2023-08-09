@@ -83,8 +83,11 @@ core/util.py
 
 ```python
 append_zl_tick_data(database_dir: str, variety: str, date_: str = '', factor_name: str = '', author: str = '')
+
+# 先设置好os.environ['DATABASE_DIR']
+append_zl_tick_data(variety: str, date_: str = '', factor_name: str = '', author: str = '')
 ```
-功能：追加最新的主力合约Tick数据。
+功能：追加最新的主力合约Tick数据。这里追加的意思是原来已存在数据，但是需要有新的数据添加到其上面。
 
 参数：
 
@@ -102,7 +105,7 @@ Merge.append_zl_tick_data(database_dir: str, variety='AG', date_='20230101', fac
 2023-03-13 16:16:28.228 | ERROR    | c3qts.core.merge:append_zl_tick_data:52  传入日期20230311早于或等于存储的最后日期20230311
 ```
 
-#### append_zl_tick_data
+#### sub_merge_zl_data
 
 ```python
 from c3qts.core.merge import Merge
@@ -126,6 +129,9 @@ merge_index：合并后的索引。
 
 ```python
 merge_zl_tick_data(database_dir: str, variety: str, factor_name: str = '', author: str = '')
+
+# 先设置好os.environ['DATABASE_DIR']
+merge_zl_tick_data(variety: str, factor_name: str = '', author: str = '')
 ```
 
 功能：合并主力合约Tick数据。
@@ -164,6 +170,9 @@ Merge.merge_zl_daily_data(database_dir, variety='AG')
 
 ```python
 merge_tick_data(database_dir: str, variety: str, sym: str)
+
+# 先设置好os.environ['DATABASE_DIR']
+merge_tick_data(variety: str, sym: str)
 ```
 
 功能：该函数用于拼合原始的主力合约（只针对于`ContractType.ORI`），场景是每日的定时获取
